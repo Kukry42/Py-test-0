@@ -1,11 +1,31 @@
-import docx
-document = docx.Document()
-par = document.add_paragraph('Lolem Ipsum')
-par_above = par.insert_paragraph_before('Some text at the beginning')
-table = document.add_table(rows = 6, cols = 2)
-cell = table.cell(0, 0)
-cell.text = 'видеть'
-row = table.rows[1]
-row.cells[0].text = 'думать'
-row.cells[1].text = 'thinc'
-document.save('document.docx')
+import docx, random
+document = docx.Document('table.docx')
+tables = document.tables
+for table in tables:
+    shaffeled_rows = list()
+    empty_rows = list()
+    for row in table.rows:
+        row_text_list = list()
+        for cell in row.cells:
+            row_text_list.append(cell.text)
+        if  all(row_text_list):
+            shaffeled_rows.append(row)   
+        else:
+            empty_rows.append(row)
+    random.shuffle(shaffeled_rows)
+    words_for_cells = list()
+    for row in shaffeled_rows:
+        for cell in row.cells:
+            words_for_cells.append(cell.text)
+    for row in table.rows:
+        for cell in row.cells:
+            try:
+                cell.text = words_for_cells.pop()
+            except:
+                pass
+
+
+
+
+
+document.save('table_shuffeled.docx')
